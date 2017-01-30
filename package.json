@@ -1,0 +1,34 @@
+{
+  "name": "mappingmylife",
+  "version": "1.0.0",
+  "engines": [
+    "node = 0.8.x"
+  ],
+  "description": "A template project for Cozy applications written in JavaScript",
+  "license": "MIT",
+  "main": "server.js",
+  "dependencies": {
+    "americano": "0.3.0",
+    "americano-cozy": "0.2.1"
+  },
+  "devDependencies": {
+    "should": "2.0.1",
+    "mocha": "1.13.0",
+    "request-json": "0.4.4",
+    "cozy-fixtures": "1.0.1",
+    "jslint": "0.2.0"
+  },
+  "scripts": {
+    "test": "cake tests",
+    "start": "node server.js"
+  },
+  "cozy-permissions": {
+    "GeolocationLog" : {
+        "description": "TODO !"
+    },
+    "PhoneCommunicationLog" : {
+        "description" : "TODO !"
+    }
+  },
+  "cozy-displayName": "Mapping My Life"
+}

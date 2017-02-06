@@ -9,7 +9,37 @@
 	</head>
 	<body>
 		<div id="mapid"></div>
-		<script language="javascript" type="text/javascript" src="js/index.js"></script>
-	</body>
 
+<div class="layerSwitcher">
+            <div class="container">
+                <div>
+                    <div class="dataLbl">Types de données</div>
+                    <div class="dataLayersDiv">
+                        <input type="radio" id="dayByDayRadio" name="dataType" checked /><label for="dayByDayRadio">jour par jour</label>
+                        <br />
+                        <input type="radio" id="agregatedRadio" name="dataType" /><label for="agregatedRadio">agrégées</label>
+                    </div>
+                </div>
+                <div id="layerSwitcher"></div>
+            </div>
+            <div id="openclose" class="close"></div>
+        </div>
+		<div id="toolbar">
+            <div class="toolbarHead">
+                <div id="filters">
+                    <form id="date-filter-form" commandName="dateFilter">
+                        Date: <input type="date" value="2013-09-22" id="date-filter" name="date-filter-input" path="date"/>
+                        <input type="submit" name="date-filter-submit" value="envoyer"/>
+                    </form>
+                </div>
+			</div>
+
+			<div id="timelineContainer">
+				<div id="timelineLeft"></div>
+				<div id="timeline"></div>
+				<div id="timelineRight"></div>
+			</div>
+		</div>
+	</body>
+	<script language="javascript" type="text/javascript" src="js/index.js"></script>
 </html>

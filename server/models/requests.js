@@ -70,5 +70,8 @@ module.exports = {
                 return 1;
             }
         }
+        allData : function(doc){
+            emit(doc._id, doc);
+        }
     }
 };

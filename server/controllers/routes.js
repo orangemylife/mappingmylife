@@ -8,6 +8,9 @@ module.exports = {
   },
   'getImportant': {
     get: index.mostImportant
+  },
+  'getAll' :{
+  	get: index.getAll
   }
 };
 

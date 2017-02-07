@@ -175,3 +175,44 @@ module.exports.mostImportant = function(req, res) {
         }
     });
 }
+
+module.exports.getAll = function(req, res){
+    var params = {
+            group: true
+        },
+        numbersResults = {},
+        sortFunc = function(a, b) {
+            return (b.value - a.value);
+        },
+        isError = false,
+        count = 2,
+        onSuccess= function() {
+            count -= 1;
+            if(count == 0 && !isError) {
+
+                for(var key in numbersResults) {
+                    numbersResults[key].positions.sort(sortFunc);
+                    numbersResults[key].positions.splice(10, numbersResults[key].positions.length);
+                }
+
+                res.send(200, {message: numbersResults});
+            }
+        },
+        onError = function(error) {
+            if(!isError) {
+                res.send(200, {error: error});
+            }
+            isError = true;
+        };
+    geolocationlog.rawRequest("allData",params, function(err, templates) {
+        if(err != null) {
+            onError(err);
+        } else {
+            for(var i = 0; i < templates.length; i += 1) {
+                if(!numbersResults[templates[i].key]){ numbersResults[templates[i].key] = {positions: []}; }
+                numbersResults[templates[i].key].total = templates[i].value;
+            }
+            onSuccess();
+        }
+    });
+}

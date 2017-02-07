@@ -72,6 +72,7 @@ function showPopup(e) {
 
 
 function init() {
+	console.log ("toto a velo");
 	url = apiPath + getDay + date;
     $.ajax(url, {
         dataType: "json",

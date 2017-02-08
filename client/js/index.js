@@ -31,7 +31,7 @@ function onMapClick(e) {
 
     popup
         .setLatLng(e.latlng)
-        .setContent("You clicked the map at " + e.latlng.toString())
+        .setContent("You clicked the map at " + e.latlng)
         .openOn(mymap);
 }
 
@@ -73,7 +73,7 @@ function showPopup(e) {
 
 function init() {
 	console.log ("toto a velo");
-	url = apiPath + getImportant;
+	url = apiPath + "getAll";
     $.ajax(url, {
         dataType: "json",
         success: function(data) {

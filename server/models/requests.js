@@ -16,7 +16,7 @@ var maxDist = 0.000008,
 
 
 module.exports = {
-    geolocationlog: {
+    geopoint: {
         all: americano.defaultRequests.all,
         byDay: function(doc) {
             if(doc.radius < 1000) {
@@ -69,11 +69,11 @@ module.exports = {
             reduce: function (key, values, rereduce) {
                 return 1;
             }
-        }
+        },
         getAll :{
             map : function(doc){
                 return emit(doc._id, doc);
-            };
+            }
         }
     }
 };

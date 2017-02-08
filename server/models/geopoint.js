@@ -1,6 +1,6 @@
 var americano = require('americano');
 
-var GeolocationLog = americano.getModel('geopoint', {
+var geopoint = americano.getModel('geopoint', {
     _id : String,
     docTypeVersion: String,
     timestamp: String,
@@ -11,4 +11,4 @@ var GeolocationLog = americano.getModel('geopoint', {
     radius: Number
 });
 
-module.exports = GeolocationLog;
+module.exports = geopoint;

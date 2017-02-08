@@ -204,10 +204,12 @@ module.exports.getAll = function(req, res){
             }
             isError = true;
         };
-    geolocationlog.rawRequest("allData",params, function(err, templates) {
+    geolocationlog.rawRequest("getAll",params, function(err, templates) {
         if(err != null) {
             onError(err);
         } else {
+
+        console.log("test server");
             for(var i = 0; i < templates.length; i += 1) {
                 if(!numbersResults[templates[i].key]){ numbersResults[templates[i].key] = {positions: []}; }
                 numbersResults[templates[i].key].total = templates[i].value;

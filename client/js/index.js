@@ -78,6 +78,10 @@ function init() {
         dataType: "json",
         success: function(data) {
         	console.log(data);
+        },
+        error: function() {
+            alert("Une erreur est survenue lors de la récupération des données, si le problème persiste contactez un administrateur.");
+            console.error("Error retrieving data from server");
         }
     });
 }

@@ -70,10 +70,8 @@ module.exports = {
                 return 1;
             }
         },
-        getAll :{
-            map : function(doc){
-                return emit(doc._id, doc);
-            }
+        getAll : function (doc) {
+            return emit(doc._id, doc);
         }
     }
 };

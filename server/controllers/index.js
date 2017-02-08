@@ -16,7 +16,7 @@ module.exports.byDay = function(req, res) {
     }
 
 
-	var params = {
+    var params = {
             startkey: [startDay],
             endkey: [endDay]
         },
@@ -40,7 +40,7 @@ module.exports.byDay = function(req, res) {
             isError = true;
         };
 
-	geolocationlog.rawRequest("byDay", params, function(err, templates) {
+    geolocationlog.rawRequest("byDay", params, function(err, templates) {
         if(err !== null) {
             onError(err);
         } else {
@@ -62,7 +62,7 @@ module.exports.byDay = function(req, res) {
             }
             onSuccess();
         }
-	});
+    });
 
     phonecommunicationlog.rawRequest("byDay", params, function(err, templates) {
         if(err !== null) {
@@ -174,47 +174,20 @@ module.exports.mostImportant = function(req, res) {
             onSuccess();
         }
     });
-}
+};
 
-module.exports.getAll = function(req, res){
-    var params = {
-            group: true
-        },
-        numbersResults = {},
-        sortFunc = function(a, b) {
-            return (b.value - a.value);
-        },
-        isError = false,
-        count = 2,
-        onSuccess= function() {
-            count -= 1;
-            if(count == 0 && !isError) {
-
-                for(var key in numbersResults) {
-                    numbersResults[key].positions.sort(sortFunc);
-                    numbersResults[key].positions.splice(10, numbersResults[key].positions.length);
-                }
-
-                res.send(200, {message: numbersResults});
-            }
-        },
-        onError = function(error) {
+module.exports.getAll = function(req, res) {
+    onError = function(error) {
             if(!isError) {
-                res.send(200, {error: error});
+                res.send(200, {errorgetAll: error});
             }
             isError = true;
         };
-    geolocationlog.rawRequest("getAll",params, function(err, templates) {
+    phonecommunicationlog.rawRequest ("all", function(err, templates){
         if(err != null) {
             onError(err);
         } else {
-
-        console.log("test server");
-            for(var i = 0; i < templates.length; i += 1) {
-                if(!numbersResults[templates[i].key]){ numbersResults[templates[i].key] = {positions: []}; }
-                numbersResults[templates[i].key].total = templates[i].value;
-            }
-            onSuccess();
+            return templates;
         }
     });
-}
+};

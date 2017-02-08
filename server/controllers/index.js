@@ -1,4 +1,4 @@
-var geolocationlog = require('../models/geolocationlog');
+var geolocationlog = require('../models/geopoint');
 var phonecommunicationlog = require('../models/phonecommunicationlog');
 
 

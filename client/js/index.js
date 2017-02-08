@@ -73,7 +73,7 @@ function showPopup(e) {
 
 function init() {
 	console.log ("toto a velo");
-	url = apiPath + "mostImportant";
+	url = apiPath + getImportant;
     $.ajax(url, {
         dataType: "json",
         success: function(data) {

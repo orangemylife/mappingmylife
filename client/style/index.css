@@ -1,1 +1,5 @@
-#mapid { height: 800px }
+#mapid { height: 600px }
+
+#info { overflow: auto; max-height :150px; position: relative;}
+
+#showhide {cursor: pointer;}

@@ -1,4 +1,5 @@
 // See documentation on https://github.com/frankrousseau/americano#routes
+
 var index = require('./index');
 
 module.exports = {
@@ -8,8 +9,11 @@ module.exports = {
   'getImportant': {
     get: index.mostImportant
   },
-  'getAll' :{
-  	get: index.getAll
+  'getAllGeoppoint': {
+    get: index.getAllGeoppoint
+  },
+  'getAllPhone': {
+    get: index.getAllPhone
   }
 };
 

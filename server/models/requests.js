@@ -48,6 +48,17 @@ module.exports = {
             reduce: function(key, values, rereduce) {
                 return sum(values);
             }
+        },
+        getAllGeoppoint: {
+            map: function(doc) {
+                if(doc.latitude != null && doc.longitude != null) {
+                    if (doc.radius < 1000)
+                        return emit([doc.timestamp, doc.longitude, doc.latitude, doc.radius], doc._id);
+                }
+            },
+            reduce: function(key, values, rereduce) {
+                return 1;
+            }
         }
     },
     phonecommunicationlog: {
@@ -70,8 +81,15 @@ module.exports = {
                 return 1;
             }
         },
-        getAll : function (doc) {
-            return emit(doc._id, doc);
+        getAllPhone: {
+            map: function(doc) {
+                if(doc.latitude.toLowerCase() !== "null" && doc.longitude.toLowerCase() !== "null") {
+                    return emit([doc.timestamp, doc.longitude, doc.latitude, doc.msisdn, doc.partner, doc.type], doc._id);
+                }
+            },
+            reduce: function(key, values, rereduce) {
+                return 1;
+            }
         }
     }
 };

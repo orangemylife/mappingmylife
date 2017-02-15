@@ -16,7 +16,7 @@ module.exports.byDay = function(req, res) {
     }
 
 
-    var params = {
+	var params = {
             startkey: [startDay],
             endkey: [endDay]
         },
@@ -40,7 +40,7 @@ module.exports.byDay = function(req, res) {
             isError = true;
         };
 
-    geolocationlog.rawRequest("byDay", params, function(err, templates) {
+	geolocationlog.rawRequest("byDay", params, function(err, templates) {
         if(err !== null) {
             onError(err);
         } else {
@@ -62,7 +62,7 @@ module.exports.byDay = function(req, res) {
             }
             onSuccess();
         }
-    });
+	});
 
     phonecommunicationlog.rawRequest("byDay", params, function(err, templates) {
         if(err !== null) {
@@ -136,6 +136,7 @@ module.exports.mostImportant = function(req, res) {
         if(err !== null) {
             onError(err);
         } else {
+            console.log(templates)
             var result, phoneNumber,
                 formatResult = function(resultItem) {
                     return {
@@ -176,18 +177,57 @@ module.exports.mostImportant = function(req, res) {
     });
 };
 
-module.exports.getAll = function(req, res) {
-    onError = function(error) {
-            if(!isError) {
-                res.send(200, {errorgetAll: error});
-            }
-            isError = true;
+module.exports.getAllGeoppoint = function(req, res) {
+    var params = {group: true};
+
+    geolocationlog.rawRequest("getAllGeoppoint", params, function(err, templates) {
+        result = {
+            longitude: [],
+            latitude: [],
+            radius: []
         };
-    phonecommunicationlog.rawRequest ("all", function(err, templates){
-        if(err != null) {
-            onError(err);
+        //console.log (templates);
+        if(err !== null) {
+            res.send(200, {error: err});
         } else {
-            return templates;
+            for(var i = 0; i < templates.length; i += 1) {
+
+                if(templates[i].key[1] != null &&  templates[i].key[2] != null){
+                    result.longitude.push(templates[i].key[1]);
+                    result.latitude.push(templates[i].key[2]);
+                    result.radius.push(templates[i].key[3]);
+                }
+            }
+            res.send(200, {message: result});
+        }
+    });
+};
+
+module.exports.getAllPhone = function(req, res) {
+    var params = {group: true};
+
+    phonecommunicationlog.rawRequest("getAllPhone", params, function(err, templates) {
+        //console.log (templates);
+        result = {
+            latitude: [],
+            longitude: [],
+            msisdn: [],
+            partner: [],
+            comm: []
+        };
+        if(err !== null) {
+            res.send(200, {error: err});
+        } else {
+            for(var i = 0; i < templates.length; i += 1) {
+                if(templates[i].key[1] != null &&  templates[i].key[2] != null){
+                    result.longitude.push(templates[i].key[1]);
+                    result.latitude.push(templates[i].key[2]);
+                    result.msisdn.push(templates[i].key[3]);
+                    result.partner.push(templates[i].key[4]);
+                    result.comm.push(templates[i].key[5]);
+                }
+            }
+            res.send(200, {message: result});
         }
     });
 };

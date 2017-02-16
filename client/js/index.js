@@ -41,14 +41,14 @@ mymap.on('click', onMapClick);*/
 
 /********** Création des markers personnalises **********/
 
-var greenIcon = L.icon({
+/*var greenIcon = L.icon({
     iconUrl: '../img/leaf-green.png',
 
     iconSize:     [19, 48], // size of the icon
     iconAnchor:   [19, 48], // point of the icon which will correspond to marker's location
     popupAnchor:  [-3, -48] // point from which the popup should open relative to the iconAnchor
 });
-
+*/
 
 /******* Creation des marker antenne *******/
 function addAntenne(antenne) {

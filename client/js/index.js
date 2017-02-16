@@ -196,7 +196,7 @@ function getDayMarkers() {
 function addPhone(phone) {
     for (var i =0; i<phone.length; i++){
         phoneInfo = phone[i];
-        marker = new L.marker([phoneInfo.latitude,phoneInfo.longitude], {icon: greenIcon}).addTo(mymap);
+        marker = new L.marker([phoneInfo.latitude,phoneInfo.longitude]).addTo(mymap);
 
         /****** Creation des info de la popup *******/
 

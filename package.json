@@ -7,6 +7,10 @@
   "description": "A template project for Cozy applications written in JavaScript",
   "license": "MIT",
   "main": "server.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/orangemylife/mappingmylife.git"
+  },
   "dependencies": {
     "americano": "0.3.0",
     "americano-cozy": "0.2.1"

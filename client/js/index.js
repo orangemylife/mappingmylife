@@ -42,7 +42,7 @@ mymap.on('click', onMapClick);*/
 /********** Création des markers personnalises **********/
 
 var greenIcon = L.icon({
-    iconUrl: '../style/images/leaf-green.png',
+    iconUrl: '../img/leaf-green.png',
 
     iconSize:     [19, 48], // size of the icon
     iconAnchor:   [19, 48], // point of the icon which will correspond to marker's location

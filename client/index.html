@@ -1,45 +1,43 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		<title>Mapping my life</title>
-		<link rel="stylesheet" type="text/css" href="style/index.css" />
-		<link rel="stylesheet" type="text/css" href="style/leaflet.css" />
-		<script language="javascript" type="text/javascript" src="js/leaflet-src.js"></script>
-	</head>
-	<body>
-		<div id="mapid"></div>
-
-<div class="layerSwitcher">
-            <div class="container">
-                <div>
-                    <div class="dataLbl">Types de données</div>
-                    <div class="dataLayersDiv">
-                        <input type="radio" id="dayByDayRadio" name="dataType" checked /><label for="dayByDayRadio">jour par jour</label>
-                        <br />
-                        <input type="radio" id="agregatedRadio" name="dataType" /><label for="agregatedRadio">agrégées</label>
-                    </div>
-                </div>
-                <div id="layerSwitcher"></div>
-            </div>
-            <div id="openclose" class="close"></div>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Mapping my life</title>
+        <link rel="stylesheet" type="text/css" href="style/index.css" />
+        <link rel="stylesheet" type="text/css" href="style/leaflet.css" />
+        <link rel="stylesheet" type="text/css" href="style/bootstrap.min.css" />
+        <script language="javascript" type="text/javascript" src="js/leaflet-src.js"></script>
+        <!--Import Markers Style-->
+        <link rel="stylesheet" type="text/css" href="style/font-awesome.min.css">
+        <link rel="stylesheet" href="style/ionicons.min.css">
+        <link rel="stylesheet" type="text/css" href="style/leaflet.awesome-markers.css">
+        <script type="text/javascript" src="js/leaflet.awesome-markers.min.js"></script>
+        <script type="text/javascript" src="js/jquery.min.js"></script>
+        <!-- <script type="text/javascript" src="js/moment.min.js"></script> -->
+        <script type="text/javascript" src="js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="style/bootstrap.min.css" />
+        <!-- Import files for TimeLine -->
+        <link rel="stylesheet" type="text/css" href="style/vis.min.css">
+        <script type="text/javascript" src="js/vis.min.js"></script>
+    </head>
+    <body>
+        <div id="mapid"></div>
+        
+        <div class="btn-group" role="group" >
+            <button id="zoomIn" type="button" class="btn btn-default"><span class="glyphicon glyphicon-plus"></span></button>
+            <button id="zoomOut" type="button" class="btn btn-default"><span class="glyphicon glyphicon-minus"></span></button>
+            <button id="moveLeft" type="button" class="btn btn-default"><span class="glyphicon glyphicon-chevron-left"></span></button>
+            <button id="moveRight" type="button" class="btn btn-default"><span class="glyphicon glyphicon-chevron-right"></span></button>
         </div>
-		<div id="toolbar">
-            <div class="toolbarHead">
-                <div id="filters">
-                    <form id="date-filter-form" commandName="dateFilter">
-                        Date: <input type="date" value="2013-09-22" id="date-filter" name="date-filter-input" path="date"/>
-                        <input type="submit" name="date-filter-submit" value="envoyer"/>
-                    </form>
-                </div>
-			</div>
 
-			<div id="timelineContainer">
-				<div id="timelineLeft"></div>
-				<div id="timeline"></div>
-				<div id="timelineRight"></div>
-			</div>
-		</div>
-	</body>
-	<script language="javascript" type="text/javascript" src="js/index.js"></script>
+        <div id="timeline">
+            
+        </div>
+         <script language="javascript" type="text/javascript" src="js/index.js"></script>
+         <script type="text/javascript">            
+            init();
+        </script>    
+        
+    </body>
+
 </html>

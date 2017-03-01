@@ -1,19 +1,18 @@
 var americano = require('americano');
 
-var PhoneCommunicationLog = americano.getModel('phonecommunicationlog', {
+var PhoneCommunicationLog = americano.getModel('PhoneCommunicationLog', {
     _id: String,
-    msisdn: String,
-    networkType: String,
-    docType : String,
-    type: String,
-    endCause: String,
-    latitude: Number,
-    chipType: String,
-    longitude: Number,
+    partner : String,
+    length : Number,
     timestamp: String,
-    partner: String,
     docTypeVersion: String,
-    length: Number
+    chipType: String,
+    type: String,
+    latitude: Number,
+    longitude: Number,
+    msisdn: String,
+    endCause: String,
+    networkType: String
 });
 
 module.exports = PhoneCommunicationLog;

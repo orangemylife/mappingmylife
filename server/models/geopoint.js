@@ -1,14 +1,13 @@
 var americano = require('americano');
 
-var GeolocationLog = americano.getModel('geopoint', {
+var geopoint = americano.getModel('geopoint', {
     _id : String,
     docTypeVersion: String,
+    msisdn: Number,
     timestamp: String,
-    docType: Dtring,
     latitude: Number,
-    msisdn: String,
     longitude: Number,
     radius: Number
 });
 
-module.exports = GeolocationLog;
+module.exports = geopoint;

@@ -1,1 +1,59 @@
-#mapid { height: 800px }
+#mapid { 
+	height: 600px;
+	margin: 10px 10px
+}
+#timeline{
+	margin: 10px 10px
+}
+.toolbarHead {
+    height: 32px;
+    /*margin: 10px 10px*/
+}
+.geotemplate {
+	font-size: 12px;
+
+}
+.phonetemplate{
+	font-size: 12px;
+
+}
+.vis-item.geoloc{  
+	border-color:orange; 
+  }
+.vis-item.phonecall{  
+	border-color: #78B2F9; 
+}
+.vis-item.geoloc.vis-dot {
+  	 border-width: 6px;
+    border-radius: 6px;
+  }
+.vis-item.phonecall.vis-dot {
+	 border-width: 6px;
+	border-radius: 6px;
+}
+.vis-item.vis-point.geoloc.vis-selected{
+	background-color: #EA638C;
+	
+}
+.vis-item.vis-dot.geoloc.vis-selected{
+	border-color: #D6FFB7;
+}
+.vis-item.vis-point.phonecall.vis-selected{
+	background-color: #CB48B7;
+	
+}
+.vis-item.vis-dot.phonecall.vis-selected{
+	border-color: #9EE493;
+}
+ .btn-group{
+	margin: 8px 8px;
+}
+.data-tooltip p {
+	margin: 0 0 3px;
+}
+#info { overflow: auto; max-height :150px; position: relative;}
+
+#showhide {cursor: pointer;}
+#info p{
+	margin: 0 0
+}

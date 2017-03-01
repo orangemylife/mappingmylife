@@ -8,6 +8,14 @@ module.exports = {
   },
   'getImportant': {
     get: index.mostImportant
+  },
+  'getAllGeopoint': {
+    get: index.getAllGeopoint
+  },
+  'getAllPhone': {
+    get: index.getAllPhone
+  },
+  'getAll':{
+    get: index.getAll
   }
 };
-

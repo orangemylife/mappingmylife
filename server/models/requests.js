@@ -6,7 +6,7 @@ var maxDist = 0.000008,
         var x = lat1 - lat2,
             y = lon1 - lon2,
             dist = (x * x) + (y * y);
-
+    
         if(dist < maxDist) {
             return true;
         } else {
@@ -16,7 +16,7 @@ var maxDist = 0.000008,
 
 
 module.exports = {
-    geolocationlog: {
+    geopoint: {
         all: americano.defaultRequests.all,
         byDay: function(doc) {
             if(doc.radius < 1000) {
@@ -48,25 +48,47 @@ module.exports = {
             reduce: function(key, values, rereduce) {
                 return sum(values);
             }
+        },
+        getAllGeopoint: {
+            map: function(doc) {
+                if(doc.latitude != null && doc.longitude != null) {
+                    if (doc.radius < 1000)
+                        return emit([doc.timestamp, doc.longitude, doc.latitude, doc.radius, doc._id], doc);
+                }
+            },
+            reduce: function(key, values, rereduce) {
+                return 1;
+            }
         }
     },
     phonecommunicationlog: {
+        
         byDay: function(doc) {
             if(doc.latitude && doc.longitude) {
-                return emit([doc.timestamp, doc.subscriberNumber], doc);
+                return emit([doc.timestamp, doc.msisdn], doc);
             } else {
                 return null;
             }
         },
         suscriberList: {
             map: function (doc) {
-                if(doc.subscriberNumber != "NULL") {
-                    return emit(doc.subscriberNumber, 1);
+                if(doc.msisdn != "NULL") {
+                    return emit(doc.msisdn, 1);
                 } else {
                     return false;
                 }
             },
             reduce: function (key, values, rereduce) {
+                return 1;
+            }
+        },
+        getAllPhone: {
+            map: function(doc) {
+                if(doc.latitude.toLowerCase() !== "null" && doc.longitude.toLowerCase() !== "null") {
+                    return emit([doc.timestamp, doc.longitude, doc.latitude, doc.msisdn, doc.partner, doc.type, doc._id], doc._id);
+                }
+            },
+            reduce: function(key, values, rereduce) {
                 return 1;
             }
         }

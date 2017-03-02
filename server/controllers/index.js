@@ -39,8 +39,9 @@ module.exports.byDay = function(req, res) {
             }
             isError = true;
         };
-    
+    console.log(params);
     geopoint.rawRequest("byDay", params, function(err, templates) {
+
         if(err !== null) {
             onError(err);
         } else {
@@ -91,6 +92,99 @@ module.exports.byDay = function(req, res) {
     });
 };
 
+module.exports.byPeriod = function(req, res) {
+    var startDay = new Date(req.params.start),
+        endDay = new Date(req.params.end);
+    
+    if (startDay & endDay) {
+        startDay = startDay.toISOString().substring(0, 10) +'A';
+        endDay = endDay.toISOString().substring(0, 10) + 'Z';
+    } else {
+        res.send(200, {error: "wrong date format"});
+        return;
+    }
+    
+    
+    var params = {
+            startkey: [startDay],
+            endkey: [endDay]
+        },
+        result = {
+            geopoint: [],
+            phonecalls: [],
+            subscriberNumbers: []
+        },
+        isError = false,
+        count = 3,
+        onSuccess= function() {
+            count -= 1;
+            if(count == 0 && !isError) {
+                res.send(200, {message: result});
+            }
+        },
+        onError = function(error) {
+            if(!isError) {
+                res.send(200, {error: error});
+            }
+            isError = true;
+        };
+    //console.log(params);
+    geopoint.rawRequest("byDay", params, function(err, templates) {
+        if(err !== null) {
+            onError(err);
+        } else {
+            if(templates && templates.length > 0) {
+                
+                for(var i = 0; i < templates.length; i += 1) {
+                    var element = {};
+                    element.start = templates[i].value.timestamp;
+                    element.id = templates[i].value._id;
+                    element.latitude = templates[i].value.latitude;
+                    element.longitude = templates[i].value.longitude;
+                    element.radius = templates[i].value.radius;
+                    result.geopoint.push(element);
+                       
+                }
+            }
+            onSuccess();
+        }
+    });
+    
+    phonecommunicationlog.rawRequest("byDay", params, function(err, templates) {
+        if(err !== null) {
+           onError(err); 
+        } else {
+            if(templates && templates.length > 0) {
+                
+                for(var i = 0; i < templates.length; i += 1) {
+                    var element = {};
+                    element.start = templates[i].value.timestamp;
+                    element.id = templates[i].value._id;
+                    element.latitude = templates[i].value.latitude;
+                    element.longitude = templates[i].value.longitude;
+                    element.msisdn = templates[i].value.msisdn;
+                    element.partner = templates[i].value.partner;
+                    element.typeMessage = templates[i].value.typeMessage;
+                    result.phonecalls.push(element);
+                };
+            }
+            onSuccess();
+        }
+    });
+    
+    phonecommunicationlog.rawRequest("suscriberList", {group: true}, function(err, templates) {
+        if(err !== null) {
+           onError(err); 
+        } else {
+            if(templates && templates.length > 0) {
+                for(var i = 0; i < templates.length; i += 1) {
+                    result.subscriberNumbers.push(templates[i].key);
+                };
+            }
+            onSuccess();
+        }
+    });
+};
 module.exports.byDate = function(req, res) {
     var params = {group: true};
     geopoint.rawRequest("byDate", params, function(err, templates) {

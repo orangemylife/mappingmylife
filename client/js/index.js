@@ -7,6 +7,7 @@ var apiPath = "",
     getAllGeoPoint = "getAllGeoPoint",
     getAllPhone = "getAllPhone",
     getAll = "getAll",
+    getPeriod = "getPeriod/"
     GEOLOCITEM = "geoloc",
     PHONECALLITEM = "phonecall";
 
@@ -66,7 +67,9 @@ function init() {
     // Initial TimeLine
     initTimeLine();
     // Appel à l'API pour récupérer les informations du jour sélectionné
-    getDayMarkers();
+
+    //getDayMarkers();
+    
     
 }
 
@@ -131,6 +134,7 @@ function initTimeLine(){
                 showCurrentTime: false,
                 editable: false,
                 orientation: 'top',
+                locale: 'fr',
                 tooltip: {
                     followMouse: true,
                     overflowMethod: 'cap'
@@ -139,6 +143,17 @@ function initTimeLine(){
             // Create a Timeline
             var items = new vis.DataSet(dataItems);
             timeline = new vis.Timeline(container, items, options, groups);
+            
+            timeline.on('rangechanged', function (properties) {
+                /*console.log(properties);*/
+                var startDay = formatDate(timeline.getWindow().start);
+                var endDay = formatDate(timeline.getWindow().end)
+                document.getElementById('start').innerHTML = "start : " + startDay; 
+                document.getElementById('end').innerHTML = "end : " + endDay;
+
+                getPeriodDayMarkers(startDay, endDay);
+
+            });
             
             //click itme to move to the marker attached
             document.getElementById('timeline').onclick = function (event) {
@@ -152,7 +167,7 @@ function initTimeLine(){
                         var longitude = item.longitude;
                         var id = latitude.toString() + longitude.toString();
                         for(var i in geoMarkers){
-                            var markerID = geoMarkers[i].options.title;
+                            var markerID = geoMarkers[i].options.alt;
                             if (markerID == id){
                                 geoMarkers[i].openPopup();
                             };
@@ -166,7 +181,7 @@ function initTimeLine(){
                         var longitude = item.longitude;
                         var id = latitude.toString() + longitude.toString();
                         for(var i in phoneMarkers){
-                            var markerID = phoneMarkers[i].options.title;
+                            var markerID = phoneMarkers[i].options.alt;
                             if (markerID == id){
                                 phoneMarkers[i].openPopup();
                             };
@@ -255,7 +270,72 @@ function addGeoInfo(geoInfo, position){
 /**
  * Fonction qui permet de récuperer les données sur l'API cozy-cloud en fonction du jour entrée dans l'élément "date-filter"
  */
-function getDayMarkers() {
+function getPeriodDayMarkers(start, end) {
+
+    url = apiPath + getPeriod + start + '/' + end;
+    $.ajax(url, {
+        dataType: "json",
+        success: function(data) {
+            var positions,
+                phonecalls,
+                item;            
+                markersTab = [];
+                phoneCallsTab = []; 
+            
+            if(data && data.message) {
+                positions = data.message.geopoint;
+                phonecalls= data.message.phonecalls;
+                
+                if(positions && positions.length > 0) {
+                    for(var i = 0; i < positions.length; i += 1) {
+                        geoInfo = selectGeoInfo(positions[i]);
+                        //console.log(geoInfo);
+                        if(geoInfo != null){
+                            geoInfo.push({start: positions[i].start.replace(/T|Z/g, " "), id: positions[i].id, itemType: GEOLOCITEM});
+
+                        }else{
+                            item = createMarker(positions[i]);
+                            markersTab.push(item);
+                        }
+                        
+                    }
+                }
+                
+                if(phonecalls && phonecalls.length > 0) {
+                    for(var i = 0; i < phonecalls.length; i += 1) {
+                        phoneInfo = selectPhoneInfo(phonecalls[i]);
+                        if(phoneInfo != null){
+                            phoneInfo.push({start: phonecalls[i].start.replace(/T|Z/g, " "), id: phonecalls[i].id, itemType: GEOLOCITEM, 
+                            msisdn: phonecalls[i].msisdn, partner: phonecalls[i].partner, typeMessage: phonecalls[i].typeMessage});
+
+                        }else{
+                            item = createPhoneMarker(phonecalls[i]);
+                            phoneCallsTab.push(item);
+                        }
+                        
+                    }
+                }
+                removerExistMarker();
+                addGeoPoint(markersTab);
+                addPhone(phoneCallsTab);
+                //console.log(markersTab);
+                if(markersTab.length != 0){
+                    var position = [markersTab[markersTab.length-1].latitude, markersTab[markersTab.length - 1].longitude];
+                    mymap.panTo(position, {animate: true});
+                }
+                
+            }
+        },
+        error: function() {
+            alert("Une erreur est survenue lors de la récupération des données, si le problème persiste contactez un administrateur.");
+            console.error("Error retrieving data from server");
+        }
+    });
+}
+/**
+ * Fonction qui permet de récuperer les données sur l'API cozy-cloud en fonction du jour entrée dans l'élément "date-filter"
+ */
+/*function getDayMarkers() {
     url = apiPath + getAll;
     $.ajax(url, {
         dataType: "json",
@@ -314,7 +394,7 @@ function getDayMarkers() {
             console.error("Error retrieving data from server");
         }
     });
-}
+}*/
 
 function createMarker(geolocation){
     var marker;
@@ -368,7 +448,8 @@ function formatDate(date) {
     if(seconds.length == 1) { seconds = "0" + seconds; }
 
     
-    return year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds;
+    /*return year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds;*/
+    return year + "-" + month + "-" + day;
 }
 
 /**
@@ -417,7 +498,7 @@ function removerExistMarker() {
 function addPhone(phone) {
     for (var i =0; i<phone.length; i++){
         phoneInfo = phone[i];
-        marker = new L.marker([phoneInfo.latitude, phoneInfo.longitude],{title:phoneInfo.latitude.toString() + phoneInfo.longitude.toString(),icon: phoneIcon});
+        marker = new L.marker([phoneInfo.latitude, phoneInfo.longitude],{alt:phoneInfo.latitude.toString() + phoneInfo.longitude.toString(),icon: phoneIcon});
         markers.addLayer(marker).addTo(mymap);
         phoneMarkers.push(marker);
         /****** Creation des info de la popup *******/
@@ -462,7 +543,7 @@ function addPhone(phone) {
 function addGeoPoint(geolocation) {
     for (var i = 0; i < geolocation.length; i++){
         geoInfo = geolocation[i];
-        marker = L.marker([geoInfo.latitude, geoInfo.longitude],{title:geoInfo.latitude.toString() + geoInfo.longitude.toString(), icon: geoIcon});
+        marker = L.marker([geoInfo.latitude, geoInfo.longitude],{alt:geoInfo.latitude.toString() + geoInfo.longitude.toString(), icon: geoIcon});
         geoMarkers.push(marker);
         markers.addLayer(marker).addTo(mymap);
         /****** Creation des info de la popup *******/

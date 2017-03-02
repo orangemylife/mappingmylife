@@ -19,7 +19,7 @@ module.exports = {
     geopoint: {
         all: americano.defaultRequests.all,
         byDay: function(doc) {
-            if(doc.radius < 1000) {
+            if(doc.radius < 1000 && doc.latitude != null && doc.longitude != null) {
                 return emit([doc.timestamp, doc.msisdn], doc);
             } else {
                 return null;
@@ -64,7 +64,7 @@ module.exports = {
     phonecommunicationlog: {
         
         byDay: function(doc) {
-            if(doc.latitude && doc.longitude) {
+            if(doc.latitude.toLowerCase() !== "null" && doc.longitude.toLowerCase() !== "null") {
                 return emit([doc.timestamp, doc.msisdn], doc);
             } else {
                 return null;

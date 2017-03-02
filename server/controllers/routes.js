@@ -17,5 +17,8 @@ module.exports = {
   },
   'getAll':{
     get: index.getAll
+  },
+  'getPeriod/:start/:end': {
+    get: index.byPeriod
   }
 };

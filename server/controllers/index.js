@@ -151,6 +151,7 @@ module.exports.byPeriod = function(req, res) {
     });
     
     phonecommunicationlog.rawRequest("byDay", params, function(err, templates) {
+        console.log(templates);
         if(err !== null) {
            onError(err); 
         } else {
@@ -164,7 +165,7 @@ module.exports.byPeriod = function(req, res) {
                     element.longitude = templates[i].value.longitude;
                     element.msisdn = templates[i].value.msisdn;
                     element.partner = templates[i].value.partner;
-                    element.typeMessage = templates[i].value.typeMessage;
+                    element.typeMessage = templates[i].value.type;
                     result.phonecalls.push(element);
                 };
             }

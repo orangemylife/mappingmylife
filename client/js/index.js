@@ -27,6 +27,7 @@ var geoItems = [];
 var phoneItems = [];
 var geoMarkers = [];
 var phoneMarkers = [];
+var recentDay;
 /*var geoIcon =  L.icon({
     iconUrl: 'style/images/redIcon.png',
     iconRetinaUrl: 'style/images/redIcon-2x.png'
@@ -106,7 +107,7 @@ function initTimeLine(){
             
             var recentDayGeo = geoPoints[geoPoints.length-1].start;
             var recentDayPhone = phoneCalls[phoneCalls.length-1].start;
-            var recentDay;
+            
             if(recentDayGeo.localeCompare(recentDayPhone) == -1){
                 recentDay = recentDayPhone;
             }
@@ -143,18 +144,23 @@ function initTimeLine(){
             // Create a Timeline
             var items = new vis.DataSet(dataItems);
             timeline = new vis.Timeline(container, items, options, groups);
-            
+            var startDay, endDay;
             timeline.on('rangechanged', function (properties) {
                 /*console.log(properties);*/
-                var startDay = formatDate(timeline.getWindow().start);
-                var endDay = formatDate(timeline.getWindow().end)
-                document.getElementById('start').innerHTML = "start : " + startDay; 
-                document.getElementById('end').innerHTML = "end : " + endDay;
+                if(properties.byUser){
+                    startDay = formatDate(timeline.getWindow().start);
+                    endDay = formatDate(timeline.getWindow().end)
+                    document.getElementById('start').innerHTML = "start : " + startDay; 
+                    document.getElementById('end').innerHTML = "end : " + endDay;
 
-                getPeriodDayMarkers(startDay, endDay);
-
+                    getPeriodDayMarkers(startDay, endDay);
+                }
             });
-            
+            getPeriodDayMarkers(recentDay, recentDay);
+            startDay = recentDay;
+            endDay = recentDay;
+            document.getElementById('start').innerHTML = "start : " + startDay; 
+            document.getElementById('end').innerHTML = "end : " + endDay;
             //click itme to move to the marker attached
             document.getElementById('timeline').onclick = function (event) {
                 var props = timeline.getEventProperties(event);
@@ -285,7 +291,6 @@ function getPeriodDayMarkers(start, end) {
             if(data && data.message) {
                 positions = data.message.geopoint;
                 phonecalls= data.message.phonecalls;
-                
                 if(positions && positions.length > 0) {
                     for(var i = 0; i < positions.length; i += 1) {
                         geoInfo = selectGeoInfo(positions[i]);
@@ -318,11 +323,7 @@ function getPeriodDayMarkers(start, end) {
                 removerExistMarker();
                 addGeoPoint(markersTab);
                 addPhone(phoneCallsTab);
-                //console.log(markersTab);
-                if(markersTab.length != 0){
-                    var position = [markersTab[markersTab.length-1].latitude, markersTab[markersTab.length - 1].longitude];
-                    mymap.panTo(position, {animate: true});
-                }
+                
                 
             }
         },
@@ -335,7 +336,7 @@ function getPeriodDayMarkers(start, end) {
 /**
  * Fonction qui permet de récuperer les données sur l'API cozy-cloud en fonction du jour entrée dans l'élément "date-filter"
  */
-/*function getDayMarkers() {
+function getDayMarkers() {
     url = apiPath + getAll;
     $.ajax(url, {
         dataType: "json",
@@ -394,7 +395,7 @@ function getPeriodDayMarkers(start, end) {
             console.error("Error retrieving data from server");
         }
     });
-}*/
+}
 
 function createMarker(geolocation){
     var marker;
@@ -532,7 +533,7 @@ function addPhone(phone) {
         marker.on('click',function(){
                 var geoContent = this._popup.getContent();
                 var item_id= geoContent.split('Id: ')[1].split('</p>')[0];
-                timeline.setSelection(item_id,{focus: true});
+                timeline.setSelection(item_id, {focus:true});
             });
         /*marker.on('mouseout', function(e) {
             this.closePopup();

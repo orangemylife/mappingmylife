@@ -70,8 +70,8 @@ function init() {
     // Appel à l'API pour récupérer les informations du jour sélectionné
 
     //getDayMarkers();
-    
-    
+   
+        
 }
 
 
@@ -156,11 +156,14 @@ function initTimeLine(){
                     getPeriodDayMarkers(startDay, endDay);
                 }
             });
+            
             getPeriodDayMarkers(recentDay, recentDay);
             startDay = recentDay;
             endDay = recentDay;
+            
             document.getElementById('start').innerHTML = "start : " + startDay; 
             document.getElementById('end').innerHTML = "end : " + endDay;
+            
             //click itme to move to the marker attached
             document.getElementById('timeline').onclick = function (event) {
                 var props = timeline.getEventProperties(event);
@@ -196,9 +199,6 @@ function initTimeLine(){
                     }
 
                 }
-
-
-
             }
         },
         error: function() {
@@ -323,7 +323,10 @@ function getPeriodDayMarkers(start, end) {
                 removerExistMarker();
                 addGeoPoint(markersTab);
                 addPhone(phoneCallsTab);
-                
+                if(start == end){
+                    drawPolyline(positions, phonecalls);
+                    
+                }
                 
             }
         },
@@ -336,65 +339,37 @@ function getPeriodDayMarkers(start, end) {
 /**
  * Fonction qui permet de récuperer les données sur l'API cozy-cloud en fonction du jour entrée dans l'élément "date-filter"
  */
-function getDayMarkers() {
-    url = apiPath + getAll;
-    $.ajax(url, {
-        dataType: "json",
-        success: function(data) {
-            var positions,
-                phonecalls,
-                item;            
-                markersTab = [];
-                phoneCallsTab = []; 
-            
-            if(data && data.message) {
-                positions = data.message.geopoint;
-                phonecalls= data.message.phonecalls;
-                
-                if(positions && positions.length > 0) {
-                    for(var i = 0; i < positions.length; i += 1) {
-                        geoInfo = selectGeoInfo(positions[i]);
-                        //console.log(geoInfo);
-                        if(geoInfo != null){
-                            geoInfo.push({start: positions[i].start.replace(/T|Z/g, " "), id: positions[i].id, itemType: GEOLOCITEM});
-
-                        }else{
-                            item = createMarker(positions[i]);
-                            markersTab.push(item);
-                        }
-                        
-                    }
-                }
-                
-                if(phonecalls && phonecalls.length > 0) {
-                    for(var i = 0; i < phonecalls.length; i += 1) {
-                        phoneInfo = selectPhoneInfo(phonecalls[i]);
-                        if(phoneInfo != null){
-                            phoneInfo.push({start: phonecalls[i].start.replace(/T|Z/g, " "), id: phonecalls[i].id, itemType: GEOLOCITEM, 
-                            msisdn: phonecalls[i].msisdn, partner: phonecalls[i].partner, typeMessage: phonecalls[i].typeMessage});
-
-                        }else{
-                            item = createPhoneMarker(phonecalls[i]);
-                            phoneCallsTab.push(item);
-                        }
-                        
-                    }
-                }
-                addGeoPoint(markersTab);
-                addPhone(phoneCallsTab);
-                //console.log(markersTab);
-                if(markersTab.length != 0){
-                    var position = [markersTab[markersTab.length-1].latitude, markersTab[markersTab.length - 1].longitude];
-                    mymap.panTo(position, {animate: true});
-                }
-                
-            }
-        },
-        error: function() {
-            alert("Une erreur est survenue lors de la récupération des données, si le problème persiste contactez un administrateur.");
-            console.error("Error retrieving data from server");
-        }
+function drawPolyline(positions, phonecalls) {
+    var items = positions.concat(phonecalls);
+    items.sort(function(a,b) { 
+        return new Date(a.start).getTime() - new Date(b.start).getTime() 
     });
+    var latlngs = [];
+    for (var i = 0; i < items.length; i++) {
+        /*if(items[i].latitude != items[i+1].latitude && items[i].longitude != items[i+1].longitude){*/
+        latlngs.push([items[i].latitude, items[i].longitude]);
+        /*}*/
+    }
+    var polyline = L.polyline(latlngs);
+    var dashline= L.polylineDecorator(polyline,{
+    patterns: [
+        // defines a pattern of 10px-wide dashes, repeated every 20px on the line
+        {offset: 10, repeat: 20, symbol: L.Symbol.dash({pixelSize: 10})}
+    ]});
+    var decorator = L.polylineDecorator(polyline);
+    var arrowOffset = 0;
+    
+    var anim = window.setInterval(function() {
+        decorator.setPatterns([
+            {offset: arrowOffset+'%', repeat: 0, symbol: L.Symbol.arrowHead({pixelSize: 15, polygon: false, pathOptions: {stroke: true}})}
+        ]);
+        if(++arrowOffset > 100){
+            arrowOffset = 0;
+        }
+    }, 200);
+    
+    markers.addLayer(polyline).addTo(mymap);
+    markers.addLayer(decorator).addTo(mymap);
 }
 
 function createMarker(geolocation){
